@@ -4,67 +4,50 @@ import axiosApi from "../../axiosApi";
 import { type Message } from "../../types.js";
 
 interface MessagesState {
-  msgs: Message[];
+  messages: Message[];
   loading: boolean;
 }
 
 const initialState: MessagesState = {
-  msgs: [],
+  messages: [],
   loading: false,
 };
 
-// export const fetchContact = createAsyncThunk("contacts/fetchAll", async () => {
-//   const response = await axiosApi.get<Record<string, Contact>>(
-//     "/contacts.json"
-//   );
-//   const data = response.data;
+export const fetchMessages = createAsyncThunk("messages/fetchAll", async () => {
+  const response = await axiosApi.get<Record<string, Message>>("/messages");
+  const data = response.data;
 
-//   if (!data) {
-//     return [];
-//   }
+  if (!data) {
+    return [];
+  }
 
-//   const result = Object.keys(data).map((id) => {
-//     return {
-//       id,
-//       ...data[id],
-//     };
-//   });
+  const result = Object.keys(data).map((id) => {
+    return {
+      id,
+      ...data[id],
+    };
+  });
 
-//   return result;
-// });
-
-// export const deleteContact = createAsyncThunk(
-//   "contact/deleteContact",
-//   async (id: string) => {
-//     await axiosApi.delete(`/contacts/${id}.json`);
-//     return id;
-//   }
-// );
-
-// export const addContact = createAsyncThunk(
-//   "contact/addContact",
-//   async (contact: Omit<Contact, "id">) => {
-//     await axiosApi.post(`/contacts.json`, contact);
-//     return contact;
-//   }
-// );
-
-// export const editContact = createAsyncThunk(
-//   "contact/editContact",
-//   async (contact: Contact) => {
-//     const { id, ...contactData } = contact;
-
-//     await axiosApi.put(`/contacts/${id}.json`, contactData);
-
-//     return contact;
-//   }
-// );
+  console.log("result", result);
+  return result;
+});
 
 const messageSlice = createSlice({
   name: "messages",
   initialState,
   reducers: {},
-  extraReducers: (builder) => {},
+  extraReducers: (builder) => {
+    builder.addCase(fetchMessages.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(fetchMessages.fulfilled, (state, action) => {
+      state.messages = action.payload;
+      state.loading = false;
+    });
+    builder.addCase(fetchMessages.rejected, (state) => {
+      state.loading = false;
+    });
+  },
 });
 
 export const messagesReducer = messageSlice.reducer;

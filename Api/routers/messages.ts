@@ -26,8 +26,6 @@ messagesRouter.get("/messages", async (req, res) => {
 });
 
 messagesRouter.post("/messages", async (req, res) => {
-  console.log('ok');
-  
   if (!req.body.message.trim() || !req.body.author.trim()) {
     return res
       .status(400)
@@ -44,9 +42,6 @@ messagesRouter.post("/messages", async (req, res) => {
   console.log("newMessage", newMessage);
   
   const fileName = `./messages/${newMessage.id}.txt`;
-  console.log("filename", fileName);
-  
-
   try {
     await fs.writeFile(fileName, JSON.stringify(newMessage));
   } catch (e) {

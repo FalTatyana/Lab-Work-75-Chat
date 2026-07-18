@@ -1,4 +1,0 @@
-{
-  "author": "newmessage",
-  "message": "test1 message"
-}
