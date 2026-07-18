@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-import axiosApi from "../axiosApi";
-import { Message } from "../types";
+import axiosApi from "../../axiosApi";
+import { type Message } from "../../types.js";
 
 interface MessagesState {
   msgs: Message[];

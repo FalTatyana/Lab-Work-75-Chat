@@ -1,4 +1,6 @@
 export interface Message {
- password: string,
- message: string
+ author: string,
+ message: string,
+ id: string,
+ datetime: string
 }

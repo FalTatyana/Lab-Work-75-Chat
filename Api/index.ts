@@ -4,10 +4,8 @@ import messagesRouter from "./routers/messages.js";
 
 const app = express();
 app.use(express.json());
-app.use('/', messagesRouter);
-
-app.use(express.json());
 app.use(cors());
+app.use('/', messagesRouter);
 
 const port = 8000;
 

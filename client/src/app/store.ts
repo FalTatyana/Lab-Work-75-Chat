@@ -1,9 +1,9 @@
 import {configureStore} from "@reduxjs/toolkit";
-import { messagesReducer } from "./contactSlice";
+import { messagesReducer } from "./messagesSlice";
 
 export const store = configureStore({
   reducer: {
-    contacts: messagesReducer,
+    messages: messagesReducer,
   }
 });
 

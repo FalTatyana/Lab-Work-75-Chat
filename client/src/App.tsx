@@ -1,14 +1,15 @@
-import { ToastContainer } from 'react-toastify';
+import { Route, Routes } from "react-router-dom";
+import Layout from "./components/Layout/Layout";
+import NewMessage from "./components/NewMessage/NewMessage";
+
 
 function App() {
   return (
-    <>
-      <ToastContainer 
-        position="top-right" 
-        autoClose={2000} 
-        theme="light" 
-      />
-    </>
+    <Layout>
+      <Routes>
+        <Route path={"/messages"} element={<NewMessage />} />
+      </Routes>
+    </Layout>
   );
 }
 
