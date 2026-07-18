@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import axiosApi from "../../axiosApi";
-import { type Message } from "../../types.js";
+import { type Message, type PostMessage } from "../../types.js";
+import dayjs from "dayjs";
 
 interface MessagesState {
   messages: Message[];
@@ -14,23 +15,21 @@ const initialState: MessagesState = {
 };
 
 export const fetchMessages = createAsyncThunk("messages/fetchAll", async () => {
-  const response = await axiosApi.get<Record<string, Message>>("/messages");
-  const data = response.data;
+  const response = await axiosApi.get<Message[]>("/messages");
 
-  if (!data) {
-    return [];
-  }
-
-  const result = Object.keys(data).map((id) => {
-    return {
-      id,
-      ...data[id],
-    };
-  });
-
-  console.log("result", result);
-  return result;
+  return response.data.map((message) => ({
+    ...message,
+    datetime: dayjs(message.datetime).format("DD.MM.YYYY HH:mm"),
+  }));
 });
+
+export const addMessage = createAsyncThunk(
+  "message/addMessage",
+  async (message: PostMessage) => {
+    const response = await axiosApi.post<Message>(`/messages`, message);
+    return response.data;
+  }
+);
 
 const messageSlice = createSlice({
   name: "messages",
@@ -46,6 +45,18 @@ const messageSlice = createSlice({
     });
     builder.addCase(fetchMessages.rejected, (state) => {
       state.loading = false;
+    });
+    builder.addCase(addMessage.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(addMessage.fulfilled, (state, action) => {
+      state.loading = false;
+      state.messages.push(action.payload);
+      toast.success("Added new message");
+    });
+    builder.addCase(addMessage.rejected, (state) => {
+      state.loading = false;
+      toast.error("Success Denied");
     });
   },
 });

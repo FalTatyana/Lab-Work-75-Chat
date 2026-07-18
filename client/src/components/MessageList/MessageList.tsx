@@ -15,7 +15,7 @@ const MessageCard = () => {
   const loading = useSelector(
     (state: RootState) => state.messages.loading
   );
-
+  
   React.useEffect(() => {
     dispatch(fetchMessages());
   }, [dispatch]);
@@ -44,10 +44,10 @@ const MessageCard = () => {
                 {msg.message}
               </Typography>
               <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                {msg.author}
+                Author: {msg.author}
               </Typography>
               <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                {msg.datetime}
+                Date: {msg.datetime}
               </Typography>
             </CardContent>
           </CardActionArea>

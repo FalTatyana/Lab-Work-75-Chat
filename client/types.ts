@@ -5,9 +5,7 @@ export interface Message {
  datetime: string
 };
 
-export interface MessageFromApi {
+export interface PostMessage {
  author: string,
- message: string,
- datetime: string,
- id: string
+ message: string
 }

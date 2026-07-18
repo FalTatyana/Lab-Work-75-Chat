@@ -38,8 +38,6 @@ messagesRouter.post("/messages", async (req, res) => {
     id: crypto.randomUUID(),
     datetime: new Date().toISOString(),
   };
-
-  console.log("newMessage", newMessage);
   
   const fileName = `./messages/${newMessage.id}.txt`;
   try {

@@ -1,80 +1,69 @@
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
-import { useState, useEffect, type ChangeEvent } from "react";
+import { useState, type ChangeEvent, type SubmitEvent } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import type { AppDispatch } from "../../app/store";
-import type { Message, MessageFromApi } from "../../../types";
+import type { PostMessage } from "../../../types";
+import { addMessage, fetchMessages } from "../../app/messagesSlice";
 
 const NewMessage = () => {
-  // const dispatch = useDispatch<AppDispatch>();
-  // const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
 
-  // const [form, setForm] = useState<MessageFromApi>({
-  //   author: '',
-  //   message: '',
-  //   datetime: '',
-  //   id: ''
-  // });
+  const [form, setForm] = useState<PostMessage>({
+    author: "",
+    message: "",
+  });
 
-  // useEffect(() => {
-  //   if (message) {
-  //     setForm(contact);
-  //   }
-  // }, [contact]);
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
 
-  // const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value } = e.target;
-  //   setForm((prev) => ({ ...prev, [name]: value }));
-  // };
+  const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-  // const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
+    if (!form.author.trim() || !form.message.trim()) {
+      toast.error("Enter name and message");
+      return;
+    }
 
-  //   // if (isEdit) {
-  //   //   await dispatch(editContact(form));
-  //   //   navigate("/");
-  //   //   return;
-  //   // }
+    const newMessage = {
+      author: form.author,
+      message: form.message,
+    };
 
-  //   if (
-  //     !form.author.trim() ||
-  //     !form.message.trim()
-  //   ) {
-  //     toast.error("Enter all data");
-  //     return;
-  //   }
-
-  //   const newContact = {
-  //     name: form.name,
-  //     number: form.number,
-  //     mail: form.mail,
-  //     img: form.img,
-  //   };
-
-  //   await dispatch(addContact(newContact));
-  //   await dispatch(fetchContact());
-  //   navigate("/");
-  // };
+    await dispatch(addMessage(newMessage));
+    await dispatch(fetchMessages());
+    setForm({
+      author: "",
+      message: "",
+    });
+  };
 
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <Stack sx={{ maxWidth: 600 }}>
         <TextField
-          id="outlined-basic"
           label="Enter your name"
           variant="outlined"
+          id="author"
+          name="author"
+          onChange={handleChange}
+          value={form.author}
           sx={{ mb: 2 }}
         />
         <TextField
-          id="outlined-basic"
           label="Enter new message"
           variant="outlined"
+          id="message"
+          name="message"
+          onChange={handleChange}
+          value={form.message}
           sx={{ mb: 2 }}
         />
-        <Button variant="outlined" sx={{ maxWidth: 200, mb: 7 }}>
+        <Button type="submit" variant="outlined" sx={{ maxWidth: 200, mb: 7 }}>
           Add message
         </Button>
       </Stack>
